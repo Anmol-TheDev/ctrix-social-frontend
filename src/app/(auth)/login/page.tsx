@@ -38,7 +38,7 @@ export default function GhibliLoginPage() {
       </div>
 
       {/* Login Card */}
-      <Card className="w-full max-w-md shadow-lg border-2 backdrop-blur-sm ">
+      <Card className="w-full max-w-md shadow-lg border-4 border-muted-foreground backdrop-blur-sm ">
         <CardHeader className="space-y-1 text-center">
           <div className="flex justify-center mb-4">
             <GiWindmill className="text-5xl" />
@@ -112,7 +112,7 @@ export default function GhibliLoginPage() {
               <span className="w-full border-t" />
             </div>
             <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-white px-2">or continue with</span>
+              <span className="bg-secondary px-2">or continue with</span>
             </div>
           </div>
           <div className="grid grid-cols-2 gap-4 w-full">

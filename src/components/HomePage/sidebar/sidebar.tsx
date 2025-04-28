@@ -66,11 +66,11 @@ export default function Sidebar() {
       <div className="hidden md:flex min-h-screen">
         <div
           className={cn(
-            "flex h-screen flex-col border-r bg-secondary transition-all duration-300",
+            "flex h-screen flex-col border-r-4  border-muted-foreground bg-secondary transition-all duration-300",
             collapsed ? "w-16" : "w-64"
           )}
         >
-          <div className="flex h-16 items-center justify-between border-b px-4">
+          <div className="flex h-16 items-center justify-between  border-b-4 border-muted-foreground  px-4">
             {!collapsed && <h2 className="text-lg font-semibold">Social App</h2>}
             <Button 
               variant="ghost" 
@@ -83,7 +83,7 @@ export default function Sidebar() {
           </div>
           <nav className="flex flex-col gap-6  p-4 w-full items-start ">
             {navItems.map((item) => (
-             <div key={item.name}  className="flex items-center">
+             <div key={item.name}  className="flex items-center ">
                <item.icon size={28}/>
                <Button 
                 variant="ghost" 
