@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-
+import Link from "next/link";
 export default function GhibliLoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
@@ -127,9 +127,9 @@ export default function GhibliLoginPage() {
           </div>
           <div className="text-center text-sm">
             Don't have an account?{" "}
-            <a href="#" className="hover:underline font-medium">
+            <Link href="/register" className="hover:underline font-medium">
               Sign up
-            </a>
+            </Link>
           </div>
         </CardFooter>
       </Card>
