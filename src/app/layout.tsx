@@ -27,9 +27,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${nunito.variable} ${ptSans.variable} antialiased relative bg-primary`}
+        className={`${nunito.variable} ${ptSans.variable} antialiased relative bg-primary `}
       >
-        <div className="texture" />
+        <div className="texture " />
         {children}
       </body>
     </html>
