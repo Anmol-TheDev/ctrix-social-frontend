@@ -16,8 +16,8 @@ const predefinedAvatars = [
   "/avtars/ChatGPT Image Apr 29, 2025, 03_55_08 PM.png",
   "/avtars/image.png",
   "/avtars/image copy.png",
-  "/api/placeholder/100/100",
-  "/api/placeholder/100/100",
+  "/avtars/image copy 2.png",
+  "/avtars/image copy 3.png",
 ];
 
 
