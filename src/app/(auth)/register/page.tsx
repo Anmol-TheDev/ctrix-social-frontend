@@ -18,17 +18,53 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
+import Api from "@/Api/axios";
 
 export default function GhibliSignupPage() {
   const [showPassword, setShowPassword] = useState(false);
-  const [email, setEmail] = useState("");
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-
+  const [formData, setFormData] = useState({
+    username: "",
+    email: "",
+    password: "",
+  })
+  const [error, setError] = useState({
+    email: "",
+    username: "",
+    password: "",
+    genral: ""
+  });
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle signup logic here
-    console.log("Signup attempt with:", { email, username, password });
+    if (!formData.username) {
+      setError((prev) => ({ ...prev, username: "Username is required" }));
+      return;
+    }
+    if (!formData.email) {
+      setError((prev) => ({ ...prev, email: "Email is required" }));
+      return;
+    }
+    if (formData.password.length < 6) {
+      setError((prev) => ({ ...prev, password: "Password must be at least 6 characters" }));
+      return;
+    }
+
+    
+    Api.post("auth/signup", {
+      username: formData.username,
+      email: formData.email,
+      password: formData.password,
+    }).then((response) => {
+      console.log(response.data);
+      // Handle successful signup (e.g., redirect to login page)
+    }).catch((error) => {
+        if (error.sttus === 400) {
+          setError((prev) => ({ ...prev, genral: "User already exists" }));
+          return 
+        } else {
+          setError((prev) => ({ ...prev, genral: "Something went wrong" }));
+          return 
+        }
+    })
   };
 
   return (
@@ -69,14 +105,16 @@ export default function GhibliSignupPage() {
                   </div>
                   <Input
                     id="username"
+                    name="username"
                     placeholder="your_username"
                     type="text" 
-                    className="pl-10"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
+                    className={`pl-10 ${error.username !=""? "border-red-400" : "" } `}
+                    value={formData.username}
+                    onChange={(e) => setFormData({ ...formData, username: e.target.value })}
                     required
                   />
                 </div>
+                {error.username && ( <Label className="py-[1px] text-red-500">{error.username}</Label> )}
               </div>
               
               <div className="space-y-2">
@@ -89,12 +127,13 @@ export default function GhibliSignupPage() {
                     id="email"
                     placeholder="your.email@example.com"
                     type="email" 
-                    className="pl-10"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    className={`pl-10 ${error.email !=""? "border-red-400" : "" } `}
+                    value={formData.email}
+                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                     required
                   />
                 </div>
+                {error.email &&( <Label className="py-[1px] text-red-500">{error.email}</Label>)}
               </div>
               
               <div className="space-y-2">
@@ -107,9 +146,9 @@ export default function GhibliSignupPage() {
                     id="password"
                     type={showPassword ? "text" : "password"}
                     placeholder="••••••••"
-                    className="pl-10"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
+                    className={`pl-10 ${error.password !=""? "border-red-400" : "" } `}
+                    value={formData.password}
+                    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                     required
                   />
                   <div 
@@ -119,6 +158,7 @@ export default function GhibliSignupPage() {
                     {showPassword ? <FaEyeSlash /> : <FaEye />}
                   </div>
                 </div>
+                {error.password &&( <Label className="py-[1px] text-red-500">{error.password}</Label>)}
               </div>
 
               <Button type="submit" className="w-full">

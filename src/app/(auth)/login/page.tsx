@@ -1,6 +1,6 @@
-"use client"
-import { FormEvent,  useState } from "react";
-
+"use client";
+import { FormEvent, use, useState } from "react";
+import Api from "@/Api/axios";
 import { FaUser, FaLock, FaEye, FaEyeSlash } from "react-icons/fa";
 import { GiWindmill, GiButterflyFlower } from "react-icons/gi";
 import { TbTree } from "react-icons/tb";
@@ -8,18 +8,65 @@ import { FcLandscape } from "react-icons/fc";
 import { FaGoogle, FaGithub } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
 export default function GhibliLoginPage() {
   const [showPassword, setShowPassword] = useState(false);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [formData, setFormData] = useState({
+    username: "",
+    password: "",
+  });
+  const [error, setError] = useState({
+    email: "",
+    username: "",
+    password: "",
+    genral: "",
+  });
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Handle login logic here
 
+    if (!formData.username) {
+      setError((prev) => ({ ...prev, username: "Username is required" }));
+      return;
+    }
+    if (formData.password.length < 6) {
+      setError((prev) => ({ ...prev, password: "Password is required" }));
+      return;
+    }
+
+    Api.post("auth/login", {
+      username: formData.username,
+      password: formData.password,
+    })
+      .then((response) => {
+        console.log(response.data);
+        // Handle successful login (e.g., redirect to dashboard page)
+      })
+      .catch((error) => {
+        if (error.response.status === 404) {
+          setError((prev) => ({ ...prev, genral: "User not found" }));
+        } else if (error.response.sttus == 401) {
+          setError((prev) => ({
+            ...prev,
+            genral: "Incorrect email or password",
+          }));
+          return;
+        } else {
+          setError((prev) => ({
+            ...prev,
+            genral: "An error occurred. Please try again.",
+          }));
+        }
+      });
   };
 
   return (
@@ -56,18 +103,21 @@ export default function GhibliLoginPage() {
                 <Label htmlFor="email">Email</Label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                    <FaUser  />
+                    <FaUser />
                   </div>
                   <Input
-                    id="email"
-                    placeholder="your.email@example.com"
-                    type="email" 
-                    className="pl-10"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    id="username"
+                    placeholder="your username"
+                    type="text"
+                    className={`pl-10 ${error.username !=""? "border-red-400" : "" } `}
+                    value={formData.username}
+                    onChange={(e) =>
+                      setFormData({ ...formData, username: e.target.value })
+                    }
                     required
                   />
                 </div>
+                {error.username && ( <Label className="py-[1px] text-red-500">{error.username}</Label> )}
               </div>
               <div className="space-y-2">
                 <Label htmlFor="password">Password</Label>
@@ -79,22 +129,21 @@ export default function GhibliLoginPage() {
                     id="password"
                     type={showPassword ? "text" : "password"}
                     placeholder="••••••••"
-                    className="pl-10"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
+                    className={`pl-10 ${error.password !=""? "border-red-400" : "" } `}
+                    value={formData.password}
+                    onChange={(e) =>
+                      setFormData({ ...formData, password: e.target.value })
+                    }
                     required
                   />
-                  <div 
+                  <div
                     className="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer"
                     onClick={() => setShowPassword(!showPassword)}
                   >
-                    {showPassword ? (
-                      <FaEyeSlash  />
-                    ) : (
-                      <FaEye  />
-                    )}
+                    {showPassword ? <FaEyeSlash /> : <FaEye />}
                   </div>
                 </div>
+                {error.password && ( <Label className="py-[1px] text-red-500">{error.password}</Label> )}
               </div>
               <div className="flex items-center justify-between">
                 <a href="#" className="text-sm hover:underline">
@@ -117,11 +166,17 @@ export default function GhibliLoginPage() {
             </div>
           </div>
           <div className="grid grid-cols-2 gap-4 w-full">
-            <Button variant="outline" className="flex items-center justify-center gap-2">
+            <Button
+              variant="outline"
+              className="flex items-center justify-center gap-2"
+            >
               <FaGoogle className="text-sm" />
               <span>Google</span>
             </Button>
-            <Button variant="outline" className="flex items-center justify-center gap-2">
+            <Button
+              variant="outline"
+              className="flex items-center justify-center gap-2"
+            >
               <FaGithub className="text-sm" />
               <span>GitHub</span>
             </Button>
