@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { 
   FiHome, 
   FiUser, 
@@ -10,17 +9,13 @@ import {
   FiSettings, 
   FiUsers, 
   FiSearch, 
-  FiMenu, 
-  FiX 
+  FiMenu
 } from "react-icons/fi";
 
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { cn } from "@/lib/utils";
 
 export default function Sidebar() {
-  const [collapsed, setCollapsed] = useState(false);
-
   const navItems = [
     { name: "Home", icon: FiHome },
     { name: "Profile", icon: FiUser },
@@ -34,14 +29,32 @@ export default function Sidebar() {
 
   return (
     <>
+      {/* Desktop Sidebar - Fixed on right side */}
+      <div className="hidden md:flex flex-col border-r-4  border-muted-foreground bg-secondary min-w-64 rounded-xl ">
+        <div className="flex h-16 items-center border-b-4 border-muted-foreground px-4">
+          <h2 className="text-lg font-semibold">Social App</h2>
+        </div>
+        <nav className="flex flex-col gap-6 p-4 w-full">
+          {navItems.map((item) => (
+            <div key={item.name} className="flex items-center">
+              <item.icon size={28} className="min-w-8" />
+              <Button variant="ghost" className="text-xl">
+                {item.name}
+              </Button>
+            </div>
+          ))}
+          <Button className="w-full mt-4">Add Post</Button>
+        </nav>
+      </div>
+
       {/* Mobile Sidebar */}
       <Sheet>
         <SheetTrigger asChild>
-          <Button variant="ghost" size="icon" className="md:hidden">
+          <Button variant="ghost" size="icon" className="fixed right-4 top-4 md:hidden z-50">
             <FiMenu size={28} />
           </Button>
         </SheetTrigger>
-        <SheetContent side="left" className="w-72 p-0">
+        <SheetContent side="right" className="w-72 p-0">
           <div className="flex h-full flex-col bg-white">
             <div className="flex h-16 items-center border-b px-4">
               <h2 className="text-lg font-semibold">Social App</h2>
@@ -57,45 +70,11 @@ export default function Sidebar() {
                   {item.name}
                 </Button>
               ))}
+              <Button className="w-full mt-4">Add Post</Button>
             </nav>
           </div>
         </SheetContent>
       </Sheet>
-
-      {/* Desktop Sidebar */}
-      <div className="hidden md:flex min-h-screen">
-        <div
-          className={cn(
-            "flex h-screen flex-col border-r-4  border-muted-foreground bg-secondary transition-all duration-300",
-            collapsed ? "w-16" : "w-64"
-          )}
-        >
-          <div className="flex h-16 items-center justify-between  border-b-4 border-muted-foreground  px-4">
-            {!collapsed && <h2 className="text-lg font-semibold">Social App</h2>}
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              onClick={() => setCollapsed(!collapsed)}
-              className={collapsed ? "mx-auto" : ""}
-            >
-              {collapsed ? <FiMenu className="h-5 w-5" /> : <FiX className="h-5 w-5" />}
-            </Button>
-          </div>
-          <nav className="flex flex-col gap-6  p-4 w-full items-start ">
-            {navItems.map((item) => (
-             <div key={item.name}  className="flex items-center ">
-               <item.icon size={28}/>
-               <Button 
-                variant="ghost" 
-                className={`text-2xl ${!collapsed ? "block": "hidden"}`}
-              >
-                { item.name}
-              </Button>
-             </div>
-            ))}
-          </nav>
-        </div>
-      </div>
     </>
   );
 }

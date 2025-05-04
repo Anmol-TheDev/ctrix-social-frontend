@@ -1,5 +1,6 @@
 "use client"
-import { useState } from "react";
+import { FormEvent,  useState } from "react";
+
 import { FaUser, FaLock, FaEye, FaEyeSlash } from "react-icons/fa";
 import { GiWindmill, GiButterflyFlower } from "react-icons/gi";
 import { TbTree } from "react-icons/tb";
@@ -15,10 +16,10 @@ export default function GhibliLoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     // Handle login logic here
-    console.log("Login attempt with:", { email, password });
+
   };
 
   return (
