@@ -92,8 +92,7 @@ export default function ProfileSetup() {
                     selectedAvatar === index
                       ? "border-muted"
                       : "border-transparent"
-                  } transition-all hover:scale-105`}
-                >
+                  } transition-all hover:scale-105`}>
                   <img
                     src={avatar}
                     alt={`Avatar ${index + 1}`}

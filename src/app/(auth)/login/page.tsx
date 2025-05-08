@@ -1,5 +1,5 @@
 "use client";
-import { FormEvent, use, useState } from "react";
+import { FormEvent, useState } from "react";
 import Api from "@/Api/axios";
 import { FaUser, FaLock, FaEye, FaEyeSlash } from "react-icons/fa";
 import { GiWindmill, GiButterflyFlower } from "react-icons/gi";
@@ -8,16 +8,11 @@ import { FcLandscape } from "react-icons/fc";
 import { FaGoogle, FaGithub } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription,CardFooter,CardHeader,CardTitle,} from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
+
+
 export default function GhibliLoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
@@ -50,6 +45,7 @@ export default function GhibliLoginPage() {
       .then((response) => {
         console.log(response.data);
         // Handle successful login (e.g., redirect to dashboard page)
+        
       })
       .catch((error) => {
         if (error.response.status === 404) {
@@ -117,7 +113,7 @@ export default function GhibliLoginPage() {
                     required
                   />
                 </div>
-                {error.username && ( <Label className="py-[1px] text-red-500">{error.username}</Label> )}
+                {error.username && ( <Label className="py-[1px] text-red-500">{error.username}</Label> )}g
               </div>
               <div className="space-y-2">
                 <Label htmlFor="password">Password</Label>

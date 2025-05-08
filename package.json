@@ -19,7 +19,6 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "croppie": "^2.6.5",
-    "js-cookie": "^3.0.5",
     "lucide-react": "^0.503.0",
     "next": "15.3.1",
     "react": "^19.0.0",

@@ -20,6 +20,7 @@ import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
 import Api from "@/Api/axios";
 
+
 export default function GhibliSignupPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
@@ -55,7 +56,7 @@ export default function GhibliSignupPage() {
       password: formData.password,
     }).then((response) => {
       console.log(response.data);
-      // Handle successful signup (e.g., redirect to login page)
+    
     }).catch((error) => {
         if (error.sttus === 400) {
           setError((prev) => ({ ...prev, genral: "User already exists" }));
