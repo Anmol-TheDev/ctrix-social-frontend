@@ -2,6 +2,7 @@ type user ={
     userName: string,
     userEmail: string,
     userAvatar: string,
+    isLoggedIn: boolean,
 }
 
 type UserData = {
@@ -17,7 +18,6 @@ type UserData = {
    setfollowing?: (following: string[]) => void,
    setpostCount?: (postCount: number) => void,
    setbio?: (bio: string) => void,
-
 }
 
 
