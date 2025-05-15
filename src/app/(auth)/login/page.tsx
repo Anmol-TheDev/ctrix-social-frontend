@@ -8,10 +8,16 @@ import { FcLandscape } from "react-icons/fc";
 import { FaGoogle, FaGithub } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardDescription,CardFooter,CardHeader,CardTitle,} from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
-
 
 export default function GhibliLoginPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -41,16 +47,20 @@ export default function GhibliLoginPage() {
     Api.post("auth/login", {
       username: formData.username,
       password: formData.password,
-    })
+    },{ headers: { "content-type": "application/x-www-form-urlencoded" } })
       .then((response) => {
-        console.log(response.data);
-        // Handle successful login (e.g., redirect to dashboard page)
-        
+        if (response.status === 200) {
+          fetch("/server/setCookie", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ token: response.data.tokenValue }),
+          });
+        }
       })
       .catch((error) => {
-        if (error.response.status === 404) {
+        if (error.status === 404) {
           setError((prev) => ({ ...prev, genral: "User not found" }));
-        } else if (error.response.sttus == 401) {
+        } else if (error.response.status == 401) {
           setError((prev) => ({
             ...prev,
             genral: "Incorrect email or password",
@@ -96,7 +106,7 @@ export default function GhibliLoginPage() {
           <form onSubmit={handleSubmit}>
             <div className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="username">Username</Label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                     <FaUser />
@@ -105,7 +115,9 @@ export default function GhibliLoginPage() {
                     id="username"
                     placeholder="your username"
                     type="text"
-                    className={`pl-10 ${error.username !=""? "border-red-400" : "" } `}
+                    className={`pl-10 ${
+                      error.username != "" ? "border-red-400" : ""
+                    } `}
                     value={formData.username}
                     onChange={(e) =>
                       setFormData({ ...formData, username: e.target.value })
@@ -113,7 +125,11 @@ export default function GhibliLoginPage() {
                     required
                   />
                 </div>
-                {error.username && ( <Label className="py-[1px] text-red-500">{error.username}</Label> )}g
+                {error.username && (
+                  <Label className="py-[1px] text-red-500">
+                    {error.username}
+                  </Label>
+                )}
               </div>
               <div className="space-y-2">
                 <Label htmlFor="password">Password</Label>
@@ -125,7 +141,9 @@ export default function GhibliLoginPage() {
                     id="password"
                     type={showPassword ? "text" : "password"}
                     placeholder="••••••••"
-                    className={`pl-10 ${error.password !=""? "border-red-400" : "" } `}
+                    className={`pl-10 ${
+                      error.password != "" ? "border-red-400" : ""
+                    } `}
                     value={formData.password}
                     onChange={(e) =>
                       setFormData({ ...formData, password: e.target.value })
@@ -139,7 +157,11 @@ export default function GhibliLoginPage() {
                     {showPassword ? <FaEyeSlash /> : <FaEye />}
                   </div>
                 </div>
-                {error.password && ( <Label className="py-[1px] text-red-500">{error.password}</Label> )}
+                {error.password && (
+                  <Label className="py-[1px] text-red-500">
+                    {error.password}
+                  </Label>
+                )}
               </div>
               <div className="flex items-center justify-between">
                 <a href="#" className="text-sm hover:underline">
