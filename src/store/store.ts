@@ -1,25 +1,33 @@
 import { create } from "zustand";
-import { UserData } from "@/types/types";
+import { User,UserProfile } from "@/types/types";
 
-const useUserStore = create<UserData>((set) => ({
-  data:{
-    userName: "",
-    userEmail: "",
-    userAvatar: "",
-    isLoggedIn: false,
-  },
-  userAvatar: "",
-  userBio: "",
-  followers: [],
-  following: [],
-  postCount: 0,
-  bio: "",
+type UserStore = {
+  user: User | null;
+  profile: UserProfile | null;
+  setUser: (data: User) => void;
+  setfollowers: (followers: string[]) => void;
+  setfollowing: (following: string[]) => void;
+  setpostCount: (postCount: number) => void;
+  setbio: (bio: string) => void;
+}
 
-    setUser: (data) => set((state) => ({ data: { ...state.data, ...data } })),
-    setfollowers: (followers) => set((state) => ({ followers: [...state.followers, ...followers] })),
-    setfollowing: (following) => set((state) => ({ following: [...state.following, ...following] })),
-    setpostCount: (postCount) => set(() => ({ postCount: postCount })),
-    setbio: (bio) => set((state) => ({ bio: bio })),
+const useUserStore = create<UserStore>((set) => ({
+    user: null,
+    profile: null,
+
+   setUser: (data: User) => set({ user: data }),
+   setfollowers: (followers: string[]) => set((state) => ({
+     profile: state.profile ? { ...state.profile, followers } : null,
+   })),
+   setfollowing: (following: string[]) => set((state) => ({
+     profile: state.profile ? { ...state.profile, following } : null,
+   })),
+   setpostCount: (postCount: number) => set((state) => ({
+     profile: state.profile ? { ...state.profile, postCount } : null,
+   })),
+   setbio: (bio: string) => set((state) => ({
+     profile: state.profile ? { ...state.profile, bio } : null,
+   })),
 }));
 
 export default useUserStore;

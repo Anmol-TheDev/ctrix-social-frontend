@@ -17,7 +17,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import Link from "next/link";
+import Link from "next/link"; 
+import useUserStore from '../../../store/store';
 
 export default function GhibliLoginPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -52,7 +53,6 @@ export default function GhibliLoginPage() {
         if (response.status === 200) {
           fetch("/server/setCookie", {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ token: response.data.tokenValue }),
           });
         }
@@ -61,7 +61,7 @@ export default function GhibliLoginPage() {
         if (error.status === 404) {
           setError((prev) => ({ ...prev, genral: "User not found" }));
         } else if (error.response.status == 401) {
-          setError((prev) => ({
+          setError((prev) => ({ 
             ...prev,
             genral: "Incorrect email or password",
           }));
