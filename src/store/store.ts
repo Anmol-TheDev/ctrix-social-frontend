@@ -15,7 +15,11 @@ const useUserStore = create<UserStore>((set) => ({
     user: null,
     profile: null,
 
-   setUser: (data: User) => set({ user: data }),
+   setUser: (data: Partial<User>) => set((state=>({
+    user: state.user ? { ...state.user, ...data} : {
+      ...data,isLoggedIn: true
+    } as User,
+   }))),
    setfollowers: (followers: string[]) => set((state) => ({
      profile: state.profile ? { ...state.profile, followers } : null,
    })),
