@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Nunito } from "next/font/google";
 import { PT_Sans } from "next/font/google";
 import "./globals.css";
-
+import GlobalToaster from "@/components/Toast/costomToast";
 const nunito = Nunito({
   variable: "--font-nunito",
   subsets: ["latin"],
@@ -31,6 +31,7 @@ export default function RootLayout({
       >
         <div className="texture " />
         {children}
+        <GlobalToaster/>
       </body>
     </html>
   );

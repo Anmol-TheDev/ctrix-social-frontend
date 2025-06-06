@@ -10,12 +10,15 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { GiWindmill, GiButterflyFlower } from "react-icons/gi";
 import { TbTree } from "react-icons/tb";
 import { FcLandscape } from "react-icons/fc";
 import { Checkbox } from "@/components/ui/checkbox";
+import toast from "react-hot-toast";
+import { Textarea } from "@/components/ui/textarea";
+
+import Api from "@/Api/axios";
 
 const predefinedAvatars = [
   "/avtars/ChatGPT_Image_Apr_29__2025__03_54_44_PM-removebg-preview.png",
@@ -35,7 +38,16 @@ export default function ProfileSetup() {
     setSelectedAvatar(index);
   };
 
-  const handleSave = () => {
+  const  handleSave = () => {
+    detailValidation(gender, bio);
+    try {
+      Api.post("/user/additional_info",{
+        bio:bio,
+        gender:gender,
+      }).then((res)=>{console.log(res)})
+    } catch (error) {
+      console.log(error)
+    }
 
   };
   return (
@@ -89,13 +101,25 @@ export default function ProfileSetup() {
             </div>
           </div>
           <div className="space-y-2">
-            <Label className="text-lg font-medium" >Gender</Label>
+            <Label className="text-lg font-medium">Gender</Label>
             <div className="flex gap-2">
-              <Checkbox checked={gender=="male"} id="male" onCheckedChange={(e)=>{e==true? setGender("male"):setGender("")}} />
+              <Checkbox
+                checked={gender == "male"}
+                id="male"
+                onCheckedChange={(e) => {
+                  e == true ? setGender("male") : setGender("");
+                }}
+              />
               <Label htmlFor="male">Male</Label>
             </div>
             <div className="flex gap-2">
-              <Checkbox checked={gender=="female"} id="female" onCheckedChange={(e)=>{e==true? setGender("female"):setGender("")}} />
+              <Checkbox
+                checked={gender == "female"}
+                id="female"
+                onCheckedChange={(e) => {
+                  e == true ? setGender("female") : setGender("");
+                }}
+              />
               <Label htmlFor="female">female</Label>
             </div>
           </div>
@@ -103,18 +127,19 @@ export default function ProfileSetup() {
             <Label htmlFor="bio" className="text-lg font-medium">
               Bio
             </Label>
-            <Input
+
+            <Textarea
               id="bio"
               value={bio}
               onChange={(e) => setBio(e.target.value)}
               placeholder="Tell us about yourself"
-              className=""
+              maxLength={200}
             />
           </div>
         </CardContent>
 
         <CardFooter className="flex justify-end border-t ">
-          <Button>
+          <Button onClick={handleSave}>
             Next <FaChevronRight className="ml-2 h-4 w-4" />
           </Button>
         </CardFooter>
@@ -123,10 +148,11 @@ export default function ProfileSetup() {
   );
 }
 
-
-
-function  detailValidation(gender: string,avtar:string,bio:string ){
-      if(gender === ""){
-        
-      }
+function detailValidation(gender: string, bio: string) {
+  if (gender === "") {
+    toast.error("Please sleact a gender");
+  }
+  if (bio === ""){
+    toast.error("Enter a bio according to your prefrance ")
+  }
 }

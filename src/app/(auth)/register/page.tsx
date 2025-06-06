@@ -20,8 +20,10 @@ import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
 import Api from "@/Api/axios";
 import useUserStore from '../../../store/store';
+import { useRouter } from "next/navigation";
 
 export default function GhibliSignupPage() {
+  const router = useRouter()
   const { setUser } = useUserStore();
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
@@ -35,6 +37,8 @@ export default function GhibliSignupPage() {
     password: "",
     genral: "",
   });
+
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.username) {
@@ -74,8 +78,8 @@ export default function GhibliSignupPage() {
             userEmail: formData.email,
             userAvatar: "",
             isLoggedIn: true,})
-            
         }
+        router.replace("/profileSetup")
       })
       .catch((error) => {
         if (error.status === 400) {
