@@ -1,7 +1,6 @@
 "use client";
 import { useState } from "react";
 import { FaChevronRight, FaSave } from "react-icons/fa";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -16,8 +15,8 @@ import { Label } from "@/components/ui/label";
 import { GiWindmill, GiButterflyFlower } from "react-icons/gi";
 import { TbTree } from "react-icons/tb";
 import { FcLandscape } from "react-icons/fc";
+import { Checkbox } from "@/components/ui/checkbox";
 
-// Predefined avatars
 const predefinedAvatars = [
   "/avtars/ChatGPT_Image_Apr_29__2025__03_54_44_PM-removebg-preview.png",
   "/avtars/ChatGPT Image Apr 29, 2025, 03_55_08 PM.png",
@@ -27,32 +26,18 @@ const predefinedAvatars = [
   "/avtars/image copy 3.png",
 ];
 
-// Main component
 export default function ProfileSetup() {
   const [selectedAvatar, setSelectedAvatar] = useState<number | null>(null);
-  const [username, setUsername] = useState<string>("");
+  const [gender, setGender] = useState<string>("");
   const [bio, setBio] = useState<string>("");
-  const [savedImage, setSavedImage] = useState<string | null>(null);
-  const [successMessage, setSuccessMessage] = useState<boolean>(false);
 
-  // Handle avatar selection
   const handleAvatarSelect = (index: number) => {
     setSelectedAvatar(index);
   };
 
-  // Handle save
   const handleSave = () => {
-    if (selectedAvatar !== null) {
-      setSavedImage(predefinedAvatars[selectedAvatar]);
-      setSuccessMessage(true);
 
-      // Clear success message after 3 seconds
-      setTimeout(() => {
-        setSuccessMessage(false);
-      }, 3000);
-    }
   };
-
   return (
     <div
       className={`min-h-screen  flex items-center justify-center p-4 relative`}
@@ -92,7 +77,8 @@ export default function ProfileSetup() {
                     selectedAvatar === index
                       ? "border-muted"
                       : "border-transparent"
-                  } transition-all hover:scale-105`}>
+                  } transition-all hover:scale-105`}
+                >
                   <img
                     src={avatar}
                     alt={`Avatar ${index + 1}`}
@@ -102,22 +88,19 @@ export default function ProfileSetup() {
               ))}
             </div>
           </div>
-
           <div className="space-y-2">
-            <Label htmlFor="username" className="">
-              Username
-            </Label>
-            <Input
-              id="username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              placeholder="Enter your username"
-              className=""
-            />
+            <Label className="text-lg font-medium" >Gender</Label>
+            <div className="flex gap-2">
+              <Checkbox checked={gender=="male"} id="male" onCheckedChange={(e)=>{e==true? setGender("male"):setGender("")}} />
+              <Label htmlFor="male">Male</Label>
+            </div>
+            <div className="flex gap-2">
+              <Checkbox checked={gender=="female"} id="female" onCheckedChange={(e)=>{e==true? setGender("female"):setGender("")}} />
+              <Label htmlFor="female">female</Label>
+            </div>
           </div>
-
           <div className="space-y-2">
-            <Label htmlFor="bio" className="">
+            <Label htmlFor="bio" className="text-lg font-medium">
               Bio
             </Label>
             <Input
@@ -128,15 +111,6 @@ export default function ProfileSetup() {
               className=""
             />
           </div>
-
-          {successMessage && (
-            <Alert className="">
-              <AlertTitle>Success!</AlertTitle>
-              <AlertDescription>
-                Your profile has been updated successfully.
-              </AlertDescription>
-            </Alert>
-          )}
         </CardContent>
 
         <CardFooter className="flex justify-end border-t ">
@@ -147,4 +121,12 @@ export default function ProfileSetup() {
       </Card>
     </div>
   );
+}
+
+
+
+function  detailValidation(gender: string,avtar:string,bio:string ){
+      if(gender === ""){
+        
+      }
 }

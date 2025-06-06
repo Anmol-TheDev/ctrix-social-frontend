@@ -22,6 +22,9 @@ import useUserStore from "../../../store/store";
 import { useRouter } from "next/navigation";
 
 export default function GhibliLoginPage() {
+  const { setUser,user } = useUserStore();
+  
+  console.log(user)
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     username: "",
@@ -61,10 +64,13 @@ export default function GhibliLoginPage() {
             method: "POST",
             body: JSON.stringify({ token: response.data.tokenValue }),
           }).then(() => {
-            router.push("/dashboard");
-            useUserStore.setState({
+            setUser({
               userName: formData.username,
-
+              userEmail: "",
+              userAvatar: "",
+              isLoggedIn: true,
+            });
+            router.push("/dashboard");
           });
         }
       })

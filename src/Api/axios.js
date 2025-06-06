@@ -1,6 +1,6 @@
 import axios from "axios";
 const Api = axios.create({
-    baseURL: "https://ctrix-social-go-backend.onrender.com/api/",
+    baseURL: "http://localhost:4000/api/",
 })
 
 export default Api;

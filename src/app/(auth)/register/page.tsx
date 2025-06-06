@@ -19,8 +19,10 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
 import Api from "@/Api/axios";
+import useUserStore from '../../../store/store';
 
 export default function GhibliSignupPage() {
+  const { setUser } = useUserStore();
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     username: "",
@@ -67,6 +69,12 @@ export default function GhibliSignupPage() {
             headers:{ "Content-Type": "application/json"},
             body: JSON.stringify({token:response.data.tokenValue})
           })
+          setUser({
+            userName: formData.username,
+            userEmail: formData.email,
+            userAvatar: "",
+            isLoggedIn: true,})
+            
         }
       })
       .catch((error) => {
