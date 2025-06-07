@@ -41,7 +41,7 @@ export default function ProfileSetup() {
   const  handleSave = () => {
     detailValidation(gender, bio);
     try {
-      Api.post("/user/additional_info",{
+      Api.patch("/user/additional_info",{
         bio:bio,
         gender:gender,
       }).then((res)=>{console.log(res)})
