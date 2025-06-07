@@ -23,8 +23,6 @@ import { useRouter } from "next/navigation";
 
 export default function GhibliLoginPage() {
   const { setUser,user } = useUserStore();
-  
-  console.log(user)
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     username: "",
