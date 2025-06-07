@@ -17,8 +17,8 @@ import { FcLandscape } from "react-icons/fc";
 import { Checkbox } from "@/components/ui/checkbox";
 import toast from "react-hot-toast";
 import { Textarea } from "@/components/ui/textarea";
-
 import Api from "@/Api/axios";
+import { useRouter } from "next/navigation";
 
 const predefinedAvatars = [
   "/avtars/ChatGPT_Image_Apr_29__2025__03_54_44_PM-removebg-preview.png",
@@ -30,21 +30,23 @@ const predefinedAvatars = [
 ];
 
 export default function ProfileSetup() {
-  const [selectedAvatar, setSelectedAvatar] = useState<number | null>(null);
+  const router = useRouter()
+  const [selectedAvatar, setSelectedAvatar] = useState<string>("");
   const [gender, setGender] = useState<string>("");
   const [bio, setBio] = useState<string>("");
 
-  const handleAvatarSelect = (index: number) => {
-    setSelectedAvatar(index);
-  };
-
   const  handleSave = () => {
-    detailValidation(gender, bio);
+    detailValidation(gender,selectedAvatar,bio);
     try {
       Api.patch("/user/additional_info",{
         bio:bio,
         gender:gender,
-      }).then((res)=>{console.log(res)})
+        avatar:selectedAvatar
+      }).then((res)=>{
+        if(res.status == 200){
+          router.replace("/home")
+        }
+      })
     } catch (error) {
       console.log(error)
     }
@@ -84,9 +86,9 @@ export default function ProfileSetup() {
               {predefinedAvatars.map((avatar, index) => (
                 <div
                   key={index}
-                  onClick={() => handleAvatarSelect(index)}
+                  onClick={() => setSelectedAvatar(avatar)}
                   className={`w-full aspect-square rounded-full overflow-hidden cursor-pointer border-4 ${
-                    selectedAvatar === index
+                    selectedAvatar === avatar
                       ? "border-muted"
                       : "border-transparent"
                   } transition-all hover:scale-105`}
@@ -148,11 +150,15 @@ export default function ProfileSetup() {
   );
 }
 
-function detailValidation(gender: string, bio: string) {
+function detailValidation(gender: string,avtar:string ,bio: string) {
+  if(avtar === ""){
+    toast.error("select a profile picture ")
+    return 
+  }
   if (gender === "") {
     toast.error("Please sleact a gender");
+    return 
   }
-  if (bio === ""){
-    toast.error("Enter a bio according to your prefrance ")
-  }
+
+
 }
