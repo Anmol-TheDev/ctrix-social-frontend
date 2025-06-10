@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
-import useUserStore from "../../../store/store";
+import { useUserStore } from "@/store/store";
 import { useRouter } from "next/navigation";
 
 export default function GhibliLoginPage() {
@@ -68,7 +68,7 @@ export default function GhibliLoginPage() {
               userAvatar: "",
               isLoggedIn: true,
             });
-            router.push("/dashboard");
+            router.push("/home");
           });
         }
       })

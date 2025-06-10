@@ -1,5 +1,5 @@
 "use client";
-
+import PostInputDialog from "@/components/Dialogs/PostDialogbox";
 import Sidebar from "@/components/HomePage/sidebar/sidebar";
 import ChatComponent from "@/components/HomePage/friendsSection/chat";
 export default function PageLayout() {
@@ -7,7 +7,7 @@ export default function PageLayout() {
     <div className="flex h-screen w-screen justify-center items-center">
       {/* Main content area (middle) for posts */}
 
-     <div className="container flex border-4 border-muted-foreground rounded-xl h-full ">
+     <div className="container flex border-4 border-muted-foreground rounded-xl  ">
      <Sidebar />
       {/* Chat component (right section) */}
 
@@ -31,6 +31,7 @@ export default function PageLayout() {
         </div>
       </div>
           <ChatComponent/>
+          <PostInputDialog/>
      </div>
       
       {/* Sidebar (right) */}

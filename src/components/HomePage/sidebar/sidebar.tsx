@@ -11,11 +11,12 @@ import {
   FiSearch, 
   FiMenu
 } from "react-icons/fi";
-
+import { useDialogStore } from "@/store/store";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
 export default function Sidebar() {
+  const {setPostDialogBox}=useDialogStore()
   const navItems = [
     { name: "Home", icon: FiHome },
     { name: "Profile", icon: FiUser },
@@ -43,7 +44,7 @@ export default function Sidebar() {
               </Button>
             </div>
           ))}
-          <Button className="w-full mt-4">Add Post</Button>
+          <Button onClick={()=>setPostDialogBox(true)} className="w-full mt-4">Add Post</Button>
         </nav>
       </div>
 
@@ -70,7 +71,7 @@ export default function Sidebar() {
                   {item.name}
                 </Button>
               ))}
-              <Button className="w-full mt-4">Add Post</Button>
+              <Button onClick={()=>setPostDialogBox(true)}  className="w-full mt-4 z-50">Add Post</Button>
             </nav>
           </div>
         </SheetContent>

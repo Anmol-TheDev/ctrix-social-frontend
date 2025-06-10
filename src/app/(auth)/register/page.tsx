@@ -19,7 +19,7 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
 import Api from "@/Api/axios";
-import useUserStore from '../../../store/store';
+import { useUserStore } from "@/store/store";
 import { useRouter } from "next/navigation";
 
 export default function GhibliSignupPage() {
