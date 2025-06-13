@@ -24,7 +24,11 @@ import Image from "next/image";
 
 const PostInputDialog = () => {
   const { postDialogBox, setPostDialogBox } = useDialogStore();
-  const [postData, setPostData] = useState({
+  const [postData, setPostData] = useState<{
+    postText: string;
+    postImages: string[];
+    postVideo: string;
+  }>({
     postText: "",
     postImages: [],
     postVideo: "",
@@ -116,9 +120,56 @@ const PostInputDialog = () => {
       const videoUrl = URL.createObjectURL(videos[0]);
       setPostData((prev) => ({ ...prev, postVideo: videoUrl, postImages: [] }));
     }
-
-    // Reset input value to allow selecting the same file again
     e.target.value = "";
+  };
+
+  const handlePaste = (e: React.ClipboardEvent<HTMLTextAreaElement>) => {
+    const items = e.clipboardData.items;
+    const prevImages = postData.postImages;
+    const videos = [];
+
+    for (const item of items) {
+      if (item.kind === "file") {
+        const file = item.getAsFile();
+        if (file && file.type.startsWith("image/")) {
+          const imageUrl = URL.createObjectURL(file);
+          prevImages.push(imageUrl);
+        }
+        if (file && file.type.startsWith("video/")) {
+          videos.push(file);
+        }
+      }
+    }
+
+    if (prevImages.length > 0) {
+      e.preventDefault();
+
+      if (prevImages.length > 3) {
+        console.log(postData, prevImages);
+        toast.error("You can only upload up to 3 images.");
+        return;
+      }
+      setPostData((prev) => ({
+        ...prev,
+        postImages: prevImages,
+        postVideo: "",
+      }));
+    }
+    if (videos.length > 0 && prevImages.length == 0) {
+      if (videos.length == 1) {
+        const videoUrl = URL.createObjectURL(videos[0]);
+        setPostData((prev) => ({
+          ...prev,
+          postVideo: videoUrl,
+          postImages: [],
+        }));
+      } else {
+        toast.error("Only one video allowed ");
+        return;
+      }
+    } else {
+      toast.error("You can only choose either 1 video or 3 images");
+    }
   };
 
   const removeImage = (indexToRemove: number) => {
@@ -158,19 +209,12 @@ const PostInputDialog = () => {
               value={postData.postText}
               onChange={handleTextChange}
               className="min-h-[120px] resize-none  focus-visible:ring-0 text-base "
+              onPaste={handlePaste}
             />
           </div>
           {postData.postImages.length > 0 && (
-            <div className="space-y-2">
-              <div
-                className={`grid gap-2 ${
-                  postData.postImages.length === 1
-                    ? "grid-cols-1"
-                    : postData.postImages.length === 2
-                    ? "grid-cols-2"
-                    : "grid-cols-2 sm:grid-cols-3"
-                }`}
-              >
+            <div className="space-y-2 ">
+              <div className={`grid gap-2 grid-cols-2 sm:grid-cols-3`}>
                 {postData.postImages.map((image, index) => (
                   <div
                     key={index}
