@@ -9,6 +9,7 @@ export async function setCookie(token:string) {
     secure: process.env.NODE_ENV === "production",
     path: "/",
     sameSite: "lax",
+    expires:59
   });
   return res;
     
