@@ -20,13 +20,14 @@ import { Textarea } from "@/components/ui/textarea";
 import Api from "@/Api/axios";
 import { useRouter } from "next/navigation";
 
-const predefinedAvatars = [
-  "/avtars/ChatGPT_Image_Apr_29__2025__03_54_44_PM-removebg-preview.png",
-  "/avtars/ChatGPT Image Apr 29, 2025, 03_55_08 PM.png",
-  "/avtars/image.png",
-  "/avtars/image copy.png",
-  "/avtars/image copy 2.png",
-  "/avtars/image copy 3.png",
+export const avatarExtension = ".png"
+export const predefinedAvatars = [
+  "crawk",
+  "gojo",
+  "itachi",
+  "kakashi",
+  "sasuke",
+  "zoro",
 ];
 
 export default function ProfileSetup() {
@@ -38,7 +39,7 @@ export default function ProfileSetup() {
   const  handleSave = () => {
     detailValidation(gender,selectedAvatar,bio);
     try {
-      Api.patch("/user/additional_info",{
+      Api.post("/profile/profile-setup",{
         bio:bio,
         gender:gender,
         avatar:selectedAvatar
@@ -94,7 +95,7 @@ export default function ProfileSetup() {
                   } transition-all hover:scale-105`}
                 >
                   <img
-                    src={avatar}
+                    src={"avatars/"+avatar + avatarExtension}
                     alt={`Avatar ${index + 1}`}
                     className="w-full h-full object-cover"
                   />
