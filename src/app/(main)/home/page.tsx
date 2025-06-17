@@ -3,7 +3,7 @@ import PostInputDialog from "@/components/Dialogs/PostDialogbox";
 import Sidebar from "@/components/HomePage/sidebar/sidebar";
 import ChatComponent from "@/components/HomePage/friendsSection/chat";
 import { useEffect, useState } from "react";
-import { feedPost, Post } from "@/types/types";
+import { feedPost } from "@/types/types";
 import Api from "@/Api/axios";
 import toast from "react-hot-toast";
 import { avatarExtension } from "@/app/(auth)/profileSetup/page";
