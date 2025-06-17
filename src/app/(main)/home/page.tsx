@@ -58,7 +58,7 @@ const postLastUpdated = (time: string): string => {
     }
     // If less than a minute, show seconds
     return `${seconds} second${seconds === 1 ? '' : 's'} ago`;
-};ssssssssssssssssssssssssss
+}
 
 export default function PageLayout() {
   const [posts,setPosts] = useState<Post[]>([])
