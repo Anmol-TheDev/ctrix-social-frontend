@@ -3,7 +3,7 @@ import PostInputDialog from "@/components/Dialogs/PostDialogbox";
 import Sidebar from "@/components/HomePage/sidebar/sidebar";
 import ChatComponent from "@/components/HomePage/friendsSection/chat";
 import { useEffect, useState } from "react";
-import { Post } from "@/types/types";
+import { feedPost, Post } from "@/types/types";
 import Api from "@/Api/axios";
 import toast from "react-hot-toast";
 
@@ -61,7 +61,7 @@ const postLastUpdated = (time: string): string => {
 }
 
 export default function PageLayout() {
-  const [posts,setPosts] = useState<Post[]>([])
+  const [posts,setPosts] = useState<feedPost[]>([])
 
   useEffect(()=>{
     Api.get("/feed").then((res)=>{
@@ -92,7 +92,7 @@ export default function PageLayout() {
               <div className="flex items-center gap-3 mb-3">
                 <div className="h-10 w-10 rounded-full bg-gray-200"></div>
                 <div>
-                  <h3 className="font-semibold">User Name</h3>
+                  <h3 className="font-semibold">{post.username}</h3>
                   <p className="text-sm text-gray-500">{postLastUpdated(post.updated_at)}</p>
                 </div>
               </div>

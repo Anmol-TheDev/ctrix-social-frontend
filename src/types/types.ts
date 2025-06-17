@@ -13,7 +13,7 @@ export type UserProfile = {
   postCount: number;
   bio: string;
 };
-export interface Post {
+export interface feedPost {
   id: string;
   creator_id: string;
   created_at: string;
@@ -21,4 +21,8 @@ export interface Post {
   updated_at: string;
   text_content: string;
   media_attached: string[];
+  username: string;
+  avatar: string
+  verified_user: boolean;
+  bio: string;
 }
