@@ -1,17 +1,24 @@
-  // types.ts (optional: good for reusability)
-  export type User = {
-      userName: string
-      userEmail: string
-      userAvatar: string
-      isLoggedIn: boolean
-    }
-    
-    export type UserProfile = {
-      userBio: string
-      followers: string[]
-      following: string[]
-      postCount: number
-      bio: string
-    }
-    
+// types.ts (optional: good for reusability)
+export type User = {
+  userName: string;
+  userEmail: string;
+  userAvatar: string;
+  isLoggedIn: boolean;
+};
 
+export type UserProfile = {
+  userBio: string;
+  followers: string[];
+  following: string[];
+  postCount: number;
+  bio: string;
+};
+export interface Post {
+  id: string;
+  creator_id: string;
+  created_at: string;
+  group_id: string;
+  updated_at: string;
+  text_content: string;
+  media_attached: string[];
+}
