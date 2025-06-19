@@ -57,10 +57,10 @@ const Post = ({ post }: { post: feedPost }) => {
   const images = !isVideo ? safeMedia.slice(0, 3) : [];
 
   return (
-    <Card className="w-full max-w-2xl mx-auto mb-4 border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
-      <CardHeader className="pb-3">
+    <Card className="w-full max-w-2xl mx-auto mb-4 border border-gray-200 shadow-sm hover:shadow-md transition-shadow gap-0">
+      <CardHeader className="">
         <div className="flex items-start justify-between">
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-1">
             <img
               src={"avatars/" + avatar + avatarExtension}
               alt={`${username}'s avatar`}
@@ -68,17 +68,16 @@ const Post = ({ post }: { post: feedPost }) => {
             />
 
             <div className="flex flex-col">
-              <div className="flex items-center space-x-2">
+              <div className="flex items-center ">
                 <h3 className="font-semibold text-gray-900 hover:underline cursor-pointer">
                   @{username}
                 </h3>
-                {verified_user && (
+                {/* {verified_user && (
                   <MdVerified className="w-5 h-5 text-blue-500" />
-                )}
+                )} */}
                 <span className="text-gray-500 text-sm">·</span>
                 <span className="text-gray-500 text-sm">{timeAgo}</span>
               </div>
-              {bio && <p className="text-sm text-gray-600 mt-1">{bio}</p>}
             </div>
           </div>
 
@@ -88,9 +87,9 @@ const Post = ({ post }: { post: feedPost }) => {
         </div>
       </CardHeader>
 
-      <CardContent className="pt-0">
+      <CardContent className="pt-0  px-16">
         {text_content && (
-          <p className="text-gray-900 mb-4 leading-relaxed">{text_content}</p>
+          <p className="text-gray-900 text-xl font-light mb-4 pl-4 leading-relaxed">{text_content}</p>
         )}
 
         <div className="mb-4">
@@ -99,6 +98,7 @@ const Post = ({ post }: { post: feedPost }) => {
               controls
               className="w-full rounded-xl border border-gray-200 max-h-[550px] object-cover"
               poster="/video-placeholder.png"
+              
             >
               <source src={safeMedia[0]} type="video/mp4" />
               Your browser does not support the video tag.
@@ -133,7 +133,7 @@ const Post = ({ post }: { post: feedPost }) => {
                     </div>
                   </DialogTrigger>
 
-                  <DialogContent className="max-w-5xl w-full p-0 overflow-hidden bg-transparent border-none">
+                  <DialogContent className=" w-full p-0 overflow-hidden bg-transparent border-none">
                     <div className="relative w-full aspect-[16/9]">
                       <Image
                         src={imgUrl}

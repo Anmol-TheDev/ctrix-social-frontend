@@ -100,7 +100,7 @@ const PostInputDialog = () => {
     });
 
     if (postData.postVideo.file) {
-      formData.append("video", postData.postVideo.file);
+      formData.append("files", postData.postVideo.file);
     }
 
     return formData;
@@ -169,6 +169,7 @@ const PostInputDialog = () => {
         formData.append("files", file);
         return URL.createObjectURL(file);
       });
+
       setPostData((prev) => ({
         ...prev,
         postImages: {
@@ -195,6 +196,7 @@ const PostInputDialog = () => {
         postVideo: { url: videoUrl, file: videos[0] },
         postImages: { urls: [], files: [] },
       }));
+      formData.append("files",videos[0])
     }
     e.target.value = "";
   };
