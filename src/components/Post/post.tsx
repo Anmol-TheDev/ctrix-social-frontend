@@ -96,13 +96,7 @@ const Post = ({ post }: { post: feedPost }) => {
 
         <div className="mb-4">
           {isVideo ? (
-            <video
-              controls
-              className="w-full rounded-xl max-h-[550px] object-cover"
-              poster="/video-placeholder.png"
-            >
-              <source src={safeMedia[0]} type="video/mp4" />
-            </video>
+            <video src={safeMedia[0]}  controls className="w-full rounded-xl max-h-[550px] object-cover" />
           ) : (
             <div
               className={`grid gap-2 ${

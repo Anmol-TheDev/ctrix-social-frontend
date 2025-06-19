@@ -36,7 +36,7 @@ export default function PageLayout() {
         <div className="flex-1 overflow-y-auto p-4">
           {/* Your posts content will go here */}
           <h1 className="text-2xl font-bold mb-6   px-4">Home Feed</h1>
-          <div className="space-y-6 overflow-scroll h-[85vh]">
+          <div className="space-y-6  h-[85vh]">
             {/* Example post items */}
             {posts.map((post, index) => (
               <Post post={post} key={index} />
