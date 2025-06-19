@@ -22,6 +22,8 @@ import { FiPlay } from "react-icons/fi";
 import toast from "react-hot-toast";
 import Image from "next/image";
 import Api from "@/Api/axios";
+import { AxiosProgressEvent } from "axios";
+import { Progress } from "@/components/ui/progress";
 
 const PostInputDialog = () => {
   const { postDialogBox, setPostDialogBox } = useDialogStore();
@@ -57,6 +59,8 @@ const PostInputDialog = () => {
     (characterCount / CHARACTER_LIMIT) * 100,
     100
   );
+  const [loading, setLoading] = useState(false);
+  const [progress, setProgress] = useState(0);
   const formData = new FormData();
 
   useEffect(() => {
@@ -86,7 +90,10 @@ const PostInputDialog = () => {
   const createFormData = (): FormData => {
     const formData = new FormData();
 
-    formData.append("post_data", JSON.stringify({text_content:postData.postText}));
+    formData.append(
+      "post_data",
+      JSON.stringify({ text_content: postData.postText })
+    );
 
     postData.postImages.files.forEach((file) => {
       formData.append("files", file);
@@ -99,12 +106,39 @@ const PostInputDialog = () => {
     return formData;
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (postData.postText === "") return toast.error("Please enter ");
-    console.log(postData)
     if (postData.postText.trim() && !isOverLimit) {
       const formData = createFormData();
-      Api.post("/post",formData).then((res)=>console.log(res))
+      try {
+        setLoading(true);
+        await Api.post("/post", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+          onUploadProgress: (progressEvent: AxiosProgressEvent) => {
+            const percent = Math.round(
+              (progressEvent.loaded * 100) / progressEvent.total
+            );
+            setProgress(percent);
+          },
+        });
+      } catch (error) {
+      } finally {
+        setPostData({
+          postText: "",
+          postImages: {
+            urls: [],
+            files: [],
+          },
+          postVideo: {
+            url: "",
+            file: null,
+          },
+        });
+        setProgress(0);
+        setLoading(false);
+      }
       setPostDialogBox(false);
     }
   };
@@ -245,7 +279,14 @@ const PostInputDialog = () => {
 
   return (
     <Dialog open={postDialogBox} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-[500px] max-h-[90vh] overflow-y-auto p-4">
+      <DialogContent className="sm:max-w-[500px] max-h-[90vh] overflow-y-auto p-4 ">
+        {/* {loading && (
+          <Progress
+            value={progress}
+            className="absolute top-0 left-0 w-full z-50 rounded-none"
+          />
+        )} */}
+
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <FiEdit3 size={18} />
@@ -382,11 +423,11 @@ const PostInputDialog = () => {
 
           <Button
             onClick={handleSubmit}
-            disabled={!postData.postText.trim() || isOverLimit}
+            disabled={!postData.postText.trim() || isOverLimit || loading}
             className="gap-2 min-w-[80px]"
           >
             <FiSend size={16} />
-            Post
+            {loading ? "Posting..." : "Post"}
           </Button>
           {isShowEmoji && (
             <div
