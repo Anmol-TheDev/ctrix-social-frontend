@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import { MdVerified, MdMoreVert } from "react-icons/md";
+import { MdMoreVert } from "react-icons/md";
 import {
   AiOutlineHeart,
   AiOutlineComment,
@@ -12,8 +12,9 @@ import {
 } from "react-icons/ai";
 import { feedPost } from "@/types/types";
 import { avatarExtension } from "@/app/(auth)/profileSetup/page";
+import { RiVerifiedBadgeFill } from "react-icons/ri";
+import { useDialogStore } from "@/store/store";
 
-// Helper function to calculate time ago
 const getTimeAgo = (dateString: string) => {
   const now = new Date();
   const postDate = new Date(dateString);
@@ -32,7 +33,6 @@ const getTimeAgo = (dateString: string) => {
   }
 };
 
-// Helper function to determine if URL is video
 const isVideoUrl = (url: string) => {
   const videoExtensions = [".mp4", ".webm", ".ogg", ".mov", ".avi"];
   return videoExtensions.some((ext) => url.toLowerCase().includes(ext));
@@ -49,16 +49,19 @@ const Post = ({ post }: { post: feedPost }) => {
     bio,
     created_at,
   } = post;
+  const { setCommentDialogBox } = useDialogStore();
+
   const [previewImg, setPreviewImg] = useState<string | null>(null);
   const timeAgo = getTimeAgo(created_at);
   const safeMedia = Array.isArray(media_attached) ? media_attached : [];
 
   const isVideo = safeMedia.length === 1 && isVideoUrl(safeMedia[0]);
   const images = !isVideo ? safeMedia.slice(0, 3) : [];
+  console.log(verified_user);
 
   return (
-    <Card className="w-full max-w-2xl mx-auto mb-4 border border-gray-200 shadow-sm hover:shadow-md transition-shadow gap-0">
-      <CardHeader className="">
+    <Card className="w-full max-w-2xl mx-auto mb-4 border border-gray-200 shadow-sm hover:shadow-md transition-shadow gap-0 ">
+      <CardHeader className=" px-0">
         <div className="flex items-start justify-between">
           <div className="flex items-center space-x-1">
             <img
@@ -68,14 +71,11 @@ const Post = ({ post }: { post: feedPost }) => {
             />
 
             <div className="flex flex-col">
-              <div className="flex items-center ">
+              <div className="flex items-center gap-2 ">
                 <h3 className="font-semibold text-gray-900 hover:underline cursor-pointer">
                   @{username}
                 </h3>
-                {/* {verified_user && (
-                  <MdVerified className="w-5 h-5 text-blue-500" />
-                )} */}
-                <span className="text-gray-500 text-sm">·</span>
+                {verified_user && <RiVerifiedBadgeFill className="w-5 h-5 " />}
                 <span className="text-gray-500 text-sm">{timeAgo}</span>
               </div>
             </div>
@@ -89,19 +89,19 @@ const Post = ({ post }: { post: feedPost }) => {
 
       <CardContent className="pt-0  px-16">
         {text_content && (
-          <p className="text-gray-900 text-xl font-light mb-4 pl-4 leading-relaxed">{text_content}</p>
+          <p className="text-gray-900 text-xl font-light mb-4 pl-4 leading-relaxed">
+            {text_content}
+          </p>
         )}
 
         <div className="mb-4">
           {isVideo ? (
             <video
               controls
-              className="w-full rounded-xl border border-gray-200 max-h-[550px] object-cover"
+              className="w-full rounded-xl max-h-[550px] object-cover"
               poster="/video-placeholder.png"
-              
             >
               <source src={safeMedia[0]} type="video/mp4" />
-              Your browser does not support the video tag.
             </video>
           ) : (
             <div
@@ -157,7 +157,10 @@ const Post = ({ post }: { post: feedPost }) => {
             <span className="text-sm font-medium">Like</span>
           </button>
 
-          <button className="flex items-center space-x-2 text-gray-500 hover:text-secondry-foreground transition-colors group">
+          <button
+            className="flex items-center space-x-2 text-gray-500 hover:text-secondry-foreground transition-colors group"
+            onClick={() => setCommentDialogBox(true)}
+          >
             <div className="p-2 rounded-full group-hover:bg-blue-50 transition-colors">
               <AiOutlineComment className="w-5 h-5" />
             </div>
