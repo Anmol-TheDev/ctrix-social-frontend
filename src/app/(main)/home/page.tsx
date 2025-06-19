@@ -7,6 +7,7 @@ import { feedPost } from "@/types/types";
 import Api from "@/Api/axios";
 import toast from "react-hot-toast";
 import { avatarExtension } from "@/app/(auth)/profileSetup/page";
+import Post from "@/components/Post/post";
 
 const postLastUpdated = (time: string): string => {
   const postDate = new Date(time);
@@ -95,25 +96,7 @@ export default function PageLayout() {
           <div className="space-y-6 overflow-scroll h-[85vh]">
             {/* Example post items */}
             {posts.map((post,index) => (
-              <div
-                key={post.id}
-                className="rounded-lg border p-4 bg-white shadow-sm"
-              >
-                <div className="flex items-center gap-3 mb-3">
-                  <img
-                    src={"avatars/" + post.avatar + avatarExtension}
-                    alt={`Avatar ${index + 1}`}
-                    className="h-12 w-10 border-2 rounded-full"
-                  />
-                  <div>
-                    <h3 className="font-semibold">{post.username}</h3>
-                    <p className="text-sm text-gray-500">
-                      {postLastUpdated(post.updated_at)}
-                    </p>
-                  </div>
-                </div>
-                <p>{post.text_content}</p>
-              </div>
+              < Post post={post} key={index}/>
             ))}
           </div>
         </div>
