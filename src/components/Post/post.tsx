@@ -14,6 +14,7 @@ import { feedPost } from "@/types/types";
 import { avatarExtension } from "@/app/(auth)/profileSetup/page";
 import { RiVerifiedBadgeFill } from "react-icons/ri";
 import { useDialogStore } from "@/store/store";
+import Link from "next/link";
 
 const getTimeAgo = (dateString: string) => {
   const now = new Date();
@@ -46,7 +47,6 @@ const Post = ({ post }: { post: feedPost }) => {
     username,
     avatar,
     verified_user,
-    bio,
     created_at,
   } = post;
   const { setCommentDialogBox } = useDialogStore();
@@ -61,42 +61,49 @@ const Post = ({ post }: { post: feedPost }) => {
 
   return (
     <Card className="w-full max-w-2xl mx-auto mb-4 border border-gray-200 shadow-sm hover:shadow-md transition-shadow gap-0 ">
-      <CardHeader className=" px-0">
-        <div className="flex items-start justify-between">
-          <div className="flex items-center space-x-1">
-            <img
-              src={"avatars/" + avatar + avatarExtension}
-              alt={`${username}'s avatar`}
-              className="h-12 w-12 border-2 rounded-full object-cover"
-            />
+      <CardHeader >
+        <Link href={`/home/post/${id}`}>
+          <div className="flex items-start justify-between">
+            <div className="flex items-center space-x-1">
+              <img
+                src={"avatars/" + avatar + avatarExtension}
+                alt={`${username}'s avatar`}
+                className="h-12 w-12 border-2 rounded-full object-cover"
+              />
 
-            <div className="flex flex-col">
-              <div className="flex items-center gap-2 ">
-                <h3 className="font-semibold text-gray-900 hover:underline cursor-pointer">
-                  @{username}
-                </h3>
-                {verified_user && <RiVerifiedBadgeFill className="w-5 h-5 " />}
-                <span className="text-gray-500 text-sm">{timeAgo}</span>
+              <div className="flex flex-col">
+                <div className="flex items-center gap-2 ">
+                  <h3 className="font-semibold text-gray-900 hover:underline cursor-pointer">
+                    @{username}
+                  </h3>
+                  {verified_user && (
+                    <RiVerifiedBadgeFill className="w-5 h-5 " />
+                  )}
+                  <span className="text-gray-500 text-sm">{timeAgo}</span>
+                </div>
               </div>
             </div>
-          </div>
 
-          <button className="p-2 hover:bg-gray-100 rounded-full transition-colors">
-            <MdMoreVert className="w-5 h-5 text-gray-500" />
-          </button>
-        </div>
+            <button className="p-2 hover:bg-gray-100 rounded-full transition-colors">
+              <MdMoreVert className="w-5 h-5 text-gray-500" />
+            </button>
+          </div>
+          {text_content && (
+            <p className="text-gray-900 text-xl font-light mb-4 pl-4 leading-relaxed">
+              {text_content}
+            </p>
+          )}
+        </Link>
       </CardHeader>
 
       <CardContent className="pt-0  px-16">
-        {text_content && (
-          <p className="text-gray-900 text-xl font-light mb-4 pl-4 leading-relaxed">
-            {text_content}
-          </p>
-        )}
-
         <div className="mb-4">
           {isVideo ? (
-            <video src={safeMedia[0]}  controls className="w-full rounded-xl max-h-[550px] object-cover" />
+            <video
+              src={safeMedia[0]}
+              controls
+              className="w-full rounded-xl max-h-[550px] object-cover"
+            />
           ) : (
             <div
               className={`grid gap-2 ${
