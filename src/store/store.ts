@@ -12,8 +12,10 @@ type UserStore = {
 };
 
 type DialogStore ={
-  postDialogBox : boolean,
+  postDialogBox : boolean
+  commentDialogBox : boolean
   setPostDialogBox : (status : boolean) => void
+  setCommentDialogBox : (status : boolean) => void
 }
 
 const useUserStore = create<UserStore>((set) => ({
@@ -49,9 +51,9 @@ const useUserStore = create<UserStore>((set) => ({
 
 const useDialogStore = create <DialogStore> ((set) => ({
   postDialogBox: false,
-
+  commentDialogBox : false,
   setPostDialogBox: (status: boolean) => set(() => ({ postDialogBox: status,})),
-
+  setCommentDialogBox : (status: boolean) => set(()=>({commentDialogBox:status})),
 
 }));
 
