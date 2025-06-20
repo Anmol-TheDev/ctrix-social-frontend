@@ -39,7 +39,7 @@ const isVideoUrl = (url: string) => {
   return videoExtensions.some((ext) => url.toLowerCase().includes(ext));
 };
 
-const Post = ({ post }: { post: feedPost }) => {
+const Post = ({ post }: { post: feedPost  }) => {
   const {
     id,
     text_content,

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { ChangeEvent, useEffect, useRef, useState } from "react";
+import React, { ChangeEvent, useRef, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -15,20 +15,17 @@ import { useDialogStore } from "@/store/store";
 import { FiEdit3, FiSend, FiX } from "react-icons/fi";
 import { Avatar } from "../ui/avatar";
 import { AvatarImage } from "@radix-ui/react-avatar";
-import EmojiPicker from "emoji-picker-react";
-import { FaRegSmileBeam } from "react-icons/fa";
 import { FaRegImage } from "react-icons/fa6";
 import { FiPlay } from "react-icons/fi";
 import toast from "react-hot-toast";
 import Image from "next/image";
 import Api from "@/Api/axios";
-import { AxiosProgressEvent } from "axios";
-import { Progress } from "@/components/ui/progress";
+import EmojiPicker from "./emojiPicker";
 
 const PostInputDialog = () => {
   const { postDialogBox, setPostDialogBox } = useDialogStore();
+  const [postMessage, setPostMessage] = useState("");
   const [postData, setPostData] = useState<{
-    postText: string;
     postImages: {
       urls: string[];
       files: File[];
@@ -38,7 +35,6 @@ const PostInputDialog = () => {
       file: File | null;
     };
   }>({
-    postText: "",
     postImages: {
       urls: [],
       files: [],
@@ -49,51 +45,22 @@ const PostInputDialog = () => {
     },
   });
   const CHARACTER_LIMIT = 280;
-  const characterCount = postData.postText.length;
+  const characterCount = postMessage.length;
   const isOverLimit = characterCount > CHARACTER_LIMIT;
   const remainingCharacters = CHARACTER_LIMIT - characterCount;
-  const [isShowEmoji, setIsShowEmoji] = useState(false);
-  const pickerRef = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
   const progressPercentage = Math.min(
     (characterCount / CHARACTER_LIMIT) * 100,
-    100
+    100,
   );
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState(0);
   const formData = new FormData();
 
-  useEffect(() => {
-    if (!postDialogBox) {
-      setIsShowEmoji(false);
-    }
-  }, [postDialogBox]);
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      const target = event.target as Node;
-      if (pickerRef.current && !pickerRef.current.contains(target)) {
-        setIsShowEmoji(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
-
-  const handleTextChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
-    setPostData((prev) => ({ ...prev, postText: e.target.value }));
-  };
-
   const createFormData = (): FormData => {
     const formData = new FormData();
 
-    formData.append(
-      "post_data",
-      JSON.stringify({ text_content: postData.postText })
-    );
+    formData.append("post_data", JSON.stringify({ text_content: postMessage }));
 
     postData.postImages.files.forEach((file) => {
       formData.append("files", file);
@@ -107,8 +74,8 @@ const PostInputDialog = () => {
   };
 
   const handleSubmit = async () => {
-    if (postData.postText === "") return toast.error("Please enter ");
-    if (postData.postText.trim() && !isOverLimit) {
+    if (postMessage === "") return toast.error("Please enter ");
+    if (postMessage.trim() && !isOverLimit) {
       const formData = createFormData();
       try {
         setLoading(true);
@@ -116,17 +83,17 @@ const PostInputDialog = () => {
           headers: {
             "Content-Type": "multipart/form-data",
           },
-          onUploadProgress: (progressEvent: AxiosProgressEvent) => {
-            const percent = Math.round(
-              (progressEvent.loaded * 100) / progressEvent.total
-            );
-            setProgress(percent);
-          },
+          // onUploadProgress: (progressEvent: AxiosProgressEvent) => {
+          //   const percent = Math.round(
+          //     (progressEvent.loaded * 100) / progressEvent.total
+          //   );
+          //   setProgress(percent);
+          // },
         });
       } catch (error) {
       } finally {
+        setPostMessage("");
         setPostData({
-          postText: "",
           postImages: {
             urls: [],
             files: [],
@@ -196,7 +163,7 @@ const PostInputDialog = () => {
         postVideo: { url: videoUrl, file: videos[0] },
         postImages: { urls: [], files: [] },
       }));
-      formData.append("files",videos[0])
+      formData.append("files", videos[0]);
     }
     e.target.value = "";
   };
@@ -273,22 +240,15 @@ const PostInputDialog = () => {
   const handleClose = () => {
     setPostDialogBox(false);
     setPostData({
-      postText: "",
       postImages: { urls: [], files: [] },
       postVideo: { url: "", file: null },
     });
+    setPostMessage("");
   };
 
   return (
     <Dialog open={postDialogBox} onOpenChange={handleClose}>
       <DialogContent className="sm:max-w-[500px] max-h-[90vh] overflow-y-auto p-4 ">
-        {/* {loading && (
-          <Progress
-            value={progress}
-            className="absolute top-0 left-0 w-full z-50 rounded-none"
-          />
-        )} */}
-
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <FiEdit3 size={18} />
@@ -309,9 +269,9 @@ const PostInputDialog = () => {
             <Textarea
               id="post-content"
               placeholder="Share your thoughts..."
-              value={postData.postText}
-              onChange={handleTextChange}
-              className="min-h-[120px] resize-none  focus-visible:ring-0 text-base "
+              value={postMessage}
+              onChange={(e) => setPostMessage(e.target.value)}
+              className="min-h-[120px] resize-none  focus-visible:ring-0 text-xl "
               onPaste={handlePaste}
             />
           </div>
@@ -394,18 +354,7 @@ const PostInputDialog = () => {
 
         <DialogFooter className="flex flex-col sm:flex-row sm:justify-between items-center gap-3 relative pt-4">
           <div className="flex items-center gap-3">
-            <button
-              onClick={() => setIsShowEmoji(!isShowEmoji)}
-              className="p-2 hover:bg-primary/10 transition-colors rounded-full group"
-            >
-              <FaRegSmileBeam
-                className={`w-5 h-5 transition-colors ${
-                  isShowEmoji
-                    ? "text-primary"
-                    : "text-muted-foreground group-hover:text-primary"
-                }`}
-              />
-            </button>
+            <EmojiPicker set={setPostMessage} />
 
             <button
               onClick={() => inputRef.current?.click()}
@@ -425,35 +374,12 @@ const PostInputDialog = () => {
 
           <Button
             onClick={handleSubmit}
-            disabled={!postData.postText.trim() || isOverLimit || loading}
+            disabled={!postMessage.trim() || isOverLimit || loading}
             className="gap-2 min-w-[80px]"
           >
             <FiSend size={16} />
             {loading ? "Posting..." : "Post"}
           </Button>
-          {isShowEmoji && (
-            <div
-              className="absolute bottom-full left-0 mb-2 z-50 shadow-2xl rounded-lg overflow-hidden"
-              ref={pickerRef}
-            >
-              <EmojiPicker
-                onEmojiClick={(e) => {
-                  setPostData((prev) => ({
-                    ...prev,
-                    postText: prev.postText + e.emoji,
-                  }));
-                  setIsShowEmoji(false);
-                }}
-                width={300}
-                height={350}
-                searchDisabled={false}
-                skinTonesDisabled={false}
-                previewConfig={{
-                  showPreview: false,
-                }}
-              />
-            </div>
-          )}
         </DialogFooter>
       </DialogContent>
     </Dialog>
