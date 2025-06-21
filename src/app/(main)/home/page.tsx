@@ -4,6 +4,7 @@ import { feedPost } from "@/types/types";
 import Api from "@/Api/axios";
 import toast from "react-hot-toast";
 import Post from "@/components/Post/post";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 export default function PageLayout() {
   const [posts, setPosts] = useState<feedPost[]>([]);
@@ -22,10 +23,10 @@ export default function PageLayout() {
   }, []);
 
   return (
-    <>
+    <ScrollArea className="h-[85vh]" >
       {posts.map((post, index) => (
         <Post post={post} key={index} />
       ))}
-    </>
+    </ScrollArea>
   );
 }

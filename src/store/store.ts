@@ -11,11 +11,11 @@ type UserStore = {
   setbio: (bio: string) => void;
 };
 
-type DialogStore ={
-  postDialogBox : boolean
-  commentDialogBox : boolean
-  setPostDialogBox : (status : boolean) => void
-  setCommentDialogBox : (status : boolean) => void
+type DialogStore = {
+  postDialogBox: boolean
+  commentDialogBox: { status: boolean, postId: string }
+  setPostDialogBox: (status: boolean) => void
+  setCommentDialogBox: (status: boolean,postId:string) => void
 }
 
 const useUserStore = create<UserStore>((set) => ({
@@ -51,9 +51,9 @@ const useUserStore = create<UserStore>((set) => ({
 
 const useDialogStore = create <DialogStore> ((set) => ({
   postDialogBox: false,
-  commentDialogBox : false,
+  commentDialogBox : {status : false , postId: ""},
   setPostDialogBox: (status: boolean) => set(() => ({ postDialogBox: status,})),
-  setCommentDialogBox : (status: boolean) => set(()=>({commentDialogBox:status})),
+  setCommentDialogBox: ( status: boolean, postId: string ) => set(()=>({commentDialogBox: {status:status,postId:postId}})),
 
 }));
 

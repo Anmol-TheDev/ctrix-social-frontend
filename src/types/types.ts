@@ -26,3 +26,16 @@ export interface feedPost {
   verified_user: boolean;
   bio: string;
 }
+export interface Comment {
+  id: string;
+  username: string;
+  avatar?: string;
+  content: string;
+  giff: string;
+  createdAt: string;
+  likesCount: number;
+  isLiked: boolean;
+  postId: string;
+  verifiedUser: boolean;
+}
+

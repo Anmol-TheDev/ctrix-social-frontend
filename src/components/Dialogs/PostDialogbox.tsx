@@ -1,6 +1,6 @@
 "use client";
 
-import React, { ChangeEvent, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -54,7 +54,6 @@ const PostInputDialog = () => {
     100,
   );
   const [loading, setLoading] = useState(false);
-  const [progress, setProgress] = useState(0);
   const formData = new FormData();
 
   const createFormData = (): FormData => {
@@ -83,14 +82,9 @@ const PostInputDialog = () => {
           headers: {
             "Content-Type": "multipart/form-data",
           },
-          // onUploadProgress: (progressEvent: AxiosProgressEvent) => {
-          //   const percent = Math.round(
-          //     (progressEvent.loaded * 100) / progressEvent.total
-          //   );
-          //   setProgress(percent);
-          // },
         });
       } catch (error) {
+        console.log(error);
       } finally {
         setPostMessage("");
         setPostData({
@@ -103,7 +97,6 @@ const PostInputDialog = () => {
             file: null,
           },
         });
-        setProgress(0);
         setLoading(false);
       }
       setPostDialogBox(false);
@@ -169,28 +162,27 @@ const PostInputDialog = () => {
   };
 
   const handlePaste = (e: React.ClipboardEvent<HTMLTextAreaElement>) => {
-    const items = e.clipboardData.items;
+    const files = Array.from(e.clipboardData.files);
     const prevImages = postData.postImages.urls;
     const prevFile = postData.postImages.files;
+
+    if (files.length === 0) return; // Only act on files, not text
+
     const videos: File[] = [];
 
-    for (const item of items) {
-      if (item.kind === "file") {
-        const file = item.getAsFile();
-        if (file && file.type.startsWith("image/")) {
-          const imageUrl = URL.createObjectURL(file);
-          prevImages.push(imageUrl);
-          prevFile.push(file);
-        }
-        if (file && file.type.startsWith("video/")) {
-          videos.push(file);
-        }
+    for (const file of files) {
+      if (file.type.startsWith("image/")) {
+        const imageUrl = URL.createObjectURL(file);
+        prevImages.push(imageUrl);
+        prevFile.push(file);
+      }
+      if (file.type.startsWith("video/")) {
+        videos.push(file);
       }
     }
 
     if (prevImages.length > 0) {
       e.preventDefault();
-
       if (prevImages.length > 3) {
         toast.error("You can only upload up to 3 images.");
         return;
@@ -207,8 +199,9 @@ const PostInputDialog = () => {
         },
       }));
     }
-    if (videos.length > 0 && prevImages.length == 0) {
-      if (videos.length == 1) {
+
+    if (videos.length > 0 && prevImages.length === 0) {
+      if (videos.length === 1) {
         const videoUrl = URL.createObjectURL(videos[0]);
         setPostData((prev) => ({
           ...prev,
@@ -216,10 +209,9 @@ const PostInputDialog = () => {
           postImages: { urls: [], files: [] },
         }));
       } else {
-        toast.error("Only one video allowed ");
-        return;
+        toast.error("Only one video allowed");
       }
-    } else {
+    } else if (videos.length > 0 || prevImages.length > 0) {
       toast.error("You can only choose either 1 video or 3 images");
     }
   };

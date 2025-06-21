@@ -14,13 +14,43 @@ import { useDialogStore } from "@/store/store";
 import EmojiPickerDialog from "./emojiPicker";
 import Giphy from "./gifDialog";
 import { FiX } from "react-icons/fi";
+import Api from "@/Api/axios";
+import toast from "react-hot-toast";
 
 const PostCommentDialog = () => {
   const [commentMessage, setCommentMessage] = useState("");
   const [gifUrl, setGifUrl] = useState("");
   const { commentDialogBox, setCommentDialogBox } = useDialogStore();
+
+  async function handleSubmit() {
+    if (commentMessage === "") {
+      return toast.error("Please enter a message before submit");
+    }
+    try {
+      const response = await Api.post(
+        `/post/comments/${commentDialogBox.postId}`,
+        {
+          content: commentMessage,
+          giff: gifUrl,
+        },
+      );
+      if (response.status == 200) {
+        return toast.success("Reply added to post");
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setCommentDialogBox(false, commentDialogBox.postId);
+      setCommentMessage("");
+    }
+  }
   return (
-    <Dialog open={commentDialogBox} onOpenChange={setCommentDialogBox}>
+    <Dialog
+      open={commentDialogBox.status}
+      onOpenChange={() =>
+        setCommentDialogBox(!commentDialogBox.status, commentDialogBox.postId)
+      }
+    >
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Reply to Comment</DialogTitle>
@@ -42,7 +72,7 @@ const PostCommentDialog = () => {
               className="w-full h-full object-cover z-10"
             />
             <button
-              onClick={() =>setGifUrl("")}
+              onClick={() => setGifUrl("")}
               className="absolute top-2 right-2 z-20 bg-black/60 hover:bg-black/80 text-white p-1 rounded-full"
             >
               <FiX size={18} />
@@ -55,7 +85,7 @@ const PostCommentDialog = () => {
             <EmojiPickerDialog set={setCommentMessage} />
             <Giphy set={setGifUrl} />
           </div>
-          <Button>
+          <Button onClick={handleSubmit}>
             <FiSend className="mr-2" />
             Reply
           </Button>
